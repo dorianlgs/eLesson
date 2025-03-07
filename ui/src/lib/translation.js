@@ -30,6 +30,9 @@ export default {
     courseAssigned: "Course assigned to you",
     coursesAssigned: "Course assigned to you",
     noLessonsFound: "No Lesson found",
+    lesson: "lesson",
+    lessons: "lessons",
+    showingLesson: "Showing",
     findLesson: "Find Lesson...",
     search: "Search",
     COURSES: "COURSES",
@@ -42,7 +45,7 @@ export default {
   },
   es: {
     welcomeTo: "Bienvenido a",
-    pleaseLogin: "Por favor, inicie sesión en su cuenta",
+    pleaseLogin: "Por favor, inicie sesión con su cuenta",
     loginFailed:
       "Error al iniciar sesión. Verifique sus credenciales y vuelva a intentarlo",
     email: "Correo Electrónico",
@@ -72,6 +75,9 @@ export default {
     courseAssigned: "Curso asignado a ti",
     coursesAssigned: "Curso asignado a ti",
     noLessonsFound: "No se encontró ninguna lección",
+    lesson: "lección",
+    lessons: "lecciones",
+    showingLesson: "Mostrando",
     findLesson: "Encuentra la lección...",
     search: "Buscar",
     COURSES: "CURSOS",

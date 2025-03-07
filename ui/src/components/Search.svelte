@@ -83,9 +83,9 @@
           {#if filteredLessons.length === 0}
             {$t("noLessonsFound")}
           {:else}
-            <!-- To translate -->
-            Showing <span class="text-main">{filteredLessons.length}</span>
-            {filteredLessons.length === 1 ? "lesson" : "lessons"}
+            {$t("showingLesson")}
+            <span class="text-main">{filteredLessons.length}</span>
+            {filteredLessons.length === 1 ? $t("lesson") : $t("lessons")}
           {/if}
         </p>
         {#each $courses as course (course.id)}

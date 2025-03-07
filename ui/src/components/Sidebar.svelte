@@ -7,7 +7,13 @@
   import Icon from "@iconify/svelte";
   import { scrollToCourse } from "../lib/scroll";
   import { isSidebarVisible, isSearchVisible, isLoading } from "../lib/store";
-  import { pb, courses, resources, currentUser } from "../lib/pocketbase";
+  import {
+    pb,
+    courses,
+    resources,
+    currentUser,
+    PUBLIC_POCKETBASE_URL,
+  } from "../lib/pocketbase";
   import { navigate, useLocation } from "svelte-routing";
   import { t } from "../lib/i18n";
 
@@ -168,7 +174,7 @@
       <div class="flex items-center justify-between gap-5">
         <div class="flex items-center gap-2">
           <img
-            src={`https://api.dicebear.com/7.x/initials/svg?seed=${$currentUser.name}&backgroundColor=${mainColor}`}
+            src="{PUBLIC_POCKETBASE_URL}/api/files/users/{$currentUser.id}/{$currentUser.avatar}"
             alt={`${$currentUser.name}'s profile avatar`}
             class="h-8 w-8 rounded-full"
           />
