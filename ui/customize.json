@@ -1,0 +1,10 @@
+{
+  "name": "Unity",
+  "logo": "/logo.png",
+  "logo_size": 110,
+
+  "colors": {
+    "main": "#158a8a",
+    "dark": "#040D12"
+  }
+}
