@@ -2,9 +2,7 @@ import PocketBase from "pocketbase";
 import { writable } from "svelte/store";
 import { showAlert } from "./store";
 
-export const PUBLIC_POCKETBASE_URL = import.meta.env.DEV
-  ? import.meta.env.VITE_DEV_PB_URL
-  : import.meta.env.VITE_PROD_PB_URL;
+export const PUBLIC_POCKETBASE_URL = import.meta.env.VITE_PB_URL;
 
 export const pb = new PocketBase(PUBLIC_POCKETBASE_URL);
 

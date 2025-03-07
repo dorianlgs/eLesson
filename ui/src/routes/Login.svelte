@@ -15,6 +15,8 @@
   let email = "";
   let password = "";
 
+  let emailInput;
+
   let isLoading = false;
   let isEmailValid = false;
   let isPasswordValid = false;
@@ -24,6 +26,8 @@
 
   $: isEmailValid = email.length >= 3 && !/\s/.test(email);
   $: isPasswordValid = password.length >= 8;
+
+  $: isMounted && emailInput && emailInput.focus();
 
   onMount(() => {
     isMounted = true;
@@ -82,6 +86,7 @@
 
       <form class="flex flex-col gap-4" on:submit|preventDefault>
         <input
+          bind:this={emailInput}
           bind:value={email}
           class={!isEmailValid && isFormSubmitted
             ? "rounded-md bg-red-400/5 p-2 text-red-400 outline outline-[1.5px] outline-red-400/10 transition-all placeholder:text-red-400/50 focus:outline-red-400/20"
