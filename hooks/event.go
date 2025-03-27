@@ -34,7 +34,7 @@ func InitHooks(app *pocketbase.PocketBase) error {
 				return err
 			}
 
-			assignees := []string{}
+			assignees = []string{}
 			for _, user := range allUsers {
 				assignees = append(assignees, user.Id)
 			}
