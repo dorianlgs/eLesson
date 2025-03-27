@@ -11,7 +11,7 @@ import (
 func InitHooks(app *pocketbase.PocketBase) error {
 
 	// create progress records for every assignee added when a course record is created
-	app.OnRecordCreate("courses").BindFunc(func(e *core.RecordEvent) error {
+	app.OnRecordCreateRequest("courses").BindFunc(func(e *core.RecordRequestEvent) error {
 		e.Next()
 		record := e.Record
 
@@ -59,7 +59,7 @@ func InitHooks(app *pocketbase.PocketBase) error {
 	})
 
 	// create/delete progress records for every assignee added/removed when a course record is updated
-	app.OnRecordUpdate("courses").BindFunc(func(e *core.RecordEvent) error {
+	app.OnRecordUpdateRequest("courses").BindFunc(func(e *core.RecordRequestEvent) error {
 		e.Next()
 
 		updatedRecord := e.Record
@@ -140,7 +140,7 @@ func InitHooks(app *pocketbase.PocketBase) error {
 	})
 
 	// remove assignees from course records when their corresponding progress records are deleted
-	app.OnRecordDelete("progress").BindFunc(func(e *core.RecordEvent) error {
+	app.OnRecordDeleteRequest("progress").BindFunc(func(e *core.RecordRequestEvent) error {
 		e.Next()
 
 		deletedProgressRecord := e.Record
@@ -184,7 +184,7 @@ func InitHooks(app *pocketbase.PocketBase) error {
 	})
 
 	// reset the course and assignee fields to their original values when they get updated
-	app.OnRecordUpdate("progress").BindFunc(func(e *core.RecordEvent) error {
+	app.OnRecordUpdateRequest("progress").BindFunc(func(e *core.RecordRequestEvent) error {
 		e.Next()
 
 		updatedRecord := e.Record
@@ -205,7 +205,7 @@ func InitHooks(app *pocketbase.PocketBase) error {
 	})
 
 	// add assignee to the corresponding course record when a progress record is created
-	app.OnRecordCreate("progress").BindFunc(func(e *core.RecordEvent) error {
+	app.OnRecordCreateRequest("progress").BindFunc(func(e *core.RecordRequestEvent) error {
 		e.Next()
 
 		progressRecord := e.Record
@@ -235,7 +235,7 @@ func InitHooks(app *pocketbase.PocketBase) error {
 	})
 
 	// add new users to courses that are assigned to everyone and create progress records for them
-	app.OnRecordCreate("users").BindFunc(func(e *core.RecordEvent) error {
+	app.OnRecordCreateRequest("users").BindFunc(func(e *core.RecordRequestEvent) error {
 		e.Next()
 
 		newUser := e.Record
