@@ -28,7 +28,7 @@
         {$alert.message}
       </h1>
       <button
-        on:click={closeAlert}
+        onclick={closeAlert}
         class="rounded-full bg-transparent p-2 transition hover:bg-white/5"
       >
         <Icon class="flex-shrink-0" icon="ph:x" />

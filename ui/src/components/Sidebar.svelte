@@ -1,4 +1,6 @@
 <script>
+  import { run } from 'svelte/legacy';
+
   import customize from "../../customize.json";
   import resolveConfig from "tailwindcss/resolveConfig";
   import tailwindConfig from "../../tailwind.config";
@@ -14,19 +16,27 @@
     currentUser,
     PUBLIC_POCKETBASE_URL,
   } from "../lib/pocketbase";
-  import { navigate, useLocation } from "svelte-routing";
+  import { navigate, useLocation } from "svelte5-router";
   import { t } from "../lib/i18n";
 
-  export let isCoursesVisible = true;
+  /**
+   * @typedef {Object} Props
+   * @property {boolean} [isCoursesVisible]
+   */
+
+  /** @type {Props} */
+  let { isCoursesVisible = true } = $props();
 
   const { name, logo, logo_size } = customize;
   const { theme } = resolveConfig(tailwindConfig);
   const mainColor = theme.colors.main.slice(1);
   const location = useLocation();
 
-  $: if ($location.pathname && window.innerWidth <= 1024) {
-    isSidebarVisible.set(false);
-  }
+  run(() => {
+    if ($location.pathname && window.innerWidth <= 1024) {
+      isSidebarVisible.set(false);
+    }
+  });
 
   function logout() {
     pb.authStore.clear();
@@ -46,14 +56,14 @@
     <div class="flex items-center justify-between">
       <img
         aria-hidden="true"
-        on:click={() => navigate("/")}
+        onclick={() => navigate("/")}
         style="width: {logo_size}px;"
         class="cursor-pointer transition hover:opacity-80"
         src={logo}
         alt={`${name} Logo`}
       />
       <button
-        on:click={() => ($isSidebarVisible = !$isSidebarVisible)}
+        onclick={() => ($isSidebarVisible = !$isSidebarVisible)}
         class="group hidden items-center justify-center rounded-full bg-transparent p-2 transition hover:bg-white/10 lg:flex"
       >
         <Icon
@@ -78,7 +88,7 @@
     {/if}
 
     <button
-      on:click={() => ($isSearchVisible = !$isSearchVisible)}
+      onclick={() => ($isSearchVisible = !$isSearchVisible)}
       class="flex w-full items-center gap-2 rounded-md border-[1.5px] border-white/10 bg-transparent p-2 text-white/50 outline-none transition hover:border-transparent hover:bg-white/10"
     >
       <Icon class="flex-shrink-0 text-base" icon="ph:magnifying-glass" />
@@ -113,7 +123,7 @@
             {#each $courses as course (course.id)}
               <button
                 aria-hidden="true"
-                on:click={() => scrollToCourse(course.id)}
+                onclick={() => scrollToCourse(course.id)}
                 class="line-clamp-1 w-full truncate rounded-md bg-transparent p-2 text-start text-white/50 transition hover:bg-white/10 hover:text-white"
               >
                 {course.title}
@@ -188,7 +198,7 @@
           </div>
         </div>
         <button
-          on:click={logout}
+          onclick={logout}
           class="flex items-center justify-center rounded-md bg-transparent p-2 text-red-400 outline outline-[1.5px] outline-red-400/20 transition hover:bg-red-400/20"
         >
           <Icon class="flex-shrink-0 text-base" icon="ph:sign-out" />

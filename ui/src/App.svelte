@@ -1,5 +1,5 @@
 <script>
-  import { Router, Route } from "svelte-routing";
+  import { Router, Route } from "svelte5-router";
   import { currentUser } from "./lib/pocketbase";
   import NotFound from "./routes/NotFound.svelte";
   import Login from "./routes/Login.svelte";

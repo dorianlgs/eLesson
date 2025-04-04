@@ -1,3 +1,4 @@
+<!-- @migration-task Error while migrating Svelte code: Can't migrate code with afterUpdate. Please migrate by hand. -->
 <script>
   import { onMount, afterUpdate, tick } from "svelte";
   import { slide } from "svelte/transition";
@@ -14,7 +15,7 @@
     updateProgressStatus,
   } from "../lib/pocketbase";
   import { cleanFileName } from "../lib/strConverter";
-  import { navigate, useLocation } from "svelte-routing";
+  import { navigate, useLocation } from "svelte5-router";
   import Sidebar from "../components/Sidebar.svelte";
   import {
     isSidebarVisible,

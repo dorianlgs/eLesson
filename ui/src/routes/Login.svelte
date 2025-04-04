@@ -1,33 +1,36 @@
 <script>
+  import { run, createBubbler, preventDefault } from "svelte/legacy";
+
+  const bubble = createBubbler();
   import customize from "../../customize.json";
   import { onMount } from "svelte";
   import { slide, scale } from "svelte/transition";
   import { quintOut } from "svelte/easing";
   import Icon from "@iconify/svelte";
   import { pb } from "../lib/pocketbase";
-  import { navigate } from "svelte-routing";
+  import { navigate } from "svelte5-router";
   import Title from "../components/Title.svelte";
   import { t } from "../lib/i18n";
 
   const { name, logo, logo_size } = customize;
 
-  let isMounted = false;
-  let email = "";
-  let password = "";
+  let isMounted = $state(false);
+  let email = $state("");
+  let password = $state("");
 
-  let emailInput;
+  let emailInput = $state();
 
-  let isLoading = false;
-  let isEmailValid = false;
-  let isPasswordValid = false;
+  let isLoading = $state(false);
 
-  let isFormSubmitted = false;
-  let loginError = false;
+  let isFormSubmitted = $state(false);
+  let loginError = $state(false);
 
-  $: isEmailValid = email.length >= 3 && !/\s/.test(email);
-  $: isPasswordValid = password.length >= 8;
+  let isEmailValid = $derived(email.length >= 3 && !/\s/.test(email));
+  let isPasswordValid = $derived(password.length >= 8);
 
-  $: isMounted && emailInput && emailInput.focus();
+  run(() => {
+    isMounted && emailInput && emailInput.focus();
+  });
 
   onMount(() => {
     isMounted = true;
@@ -57,7 +60,7 @@
 <main class="flex h-dvh flex-col items-center justify-between px-5 py-10">
   <img
     aria-hidden="true"
-    on:click={() => navigate("/")}
+    onclick={() => navigate("/")}
     style="width: {logo_size}px;"
     class="cursor-pointer transition hover:opacity-80"
     src={logo}
@@ -84,7 +87,10 @@
         </h3>
       {/if}
 
-      <form class="flex flex-col gap-4" on:submit|preventDefault>
+      <form
+        class="flex flex-col gap-4"
+        onsubmit={preventDefault(bubble("submit"))}
+      >
         <input
           bind:this={emailInput}
           bind:value={email}
@@ -120,7 +126,7 @@
           </h3>
         {/if}
         <button
-          on:click={login}
+          onclick={login}
           class={isLoading
             ? "pointer-events-none flex items-center justify-center gap-2 rounded-md bg-main p-2 opacity-50"
             : "flex items-center justify-center gap-2 rounded-md bg-main p-2 transition hover:bg-main/80"}
@@ -137,10 +143,7 @@
           {/if}
         </button>
       </form>
-      <button
-        on:click={() => navigate("/")}
-        class="mx-auto w-fit text-white/50"
-      >
+      <button onclick={() => navigate("/")} class="mx-auto w-fit text-white/50">
         {$t("alreadyLogin")}
         <span class="text-white underline transition hover:text-white/80"
           >{$t("myCourses")}</span

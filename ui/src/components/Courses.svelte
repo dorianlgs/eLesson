@@ -1,4 +1,7 @@
 <script>
+  import { run, createBubbler, stopPropagation, handlers } from 'svelte/legacy';
+
+  const bubble = createBubbler();
   import {
     lessons,
     courses,
@@ -13,26 +16,28 @@
     getStoredLessons,
     storeLessons,
   } from "../lib/store";
-  import { navigate } from "svelte-routing";
+  import { navigate } from "svelte5-router";
   import { tick } from "svelte";
   import { t } from "../lib/i18n";
 
-  let isOpen = {};
-  let loading = {};
-  let openCourseId = "";
-  let enableReactivity = true;
+  let isOpen = $state({});
+  let loading = $state({});
+  let openCourseId = $state("");
+  let enableReactivity = $state(true);
 
   // only courses that match a progress record with "In Progress" status are set to open
-  $: if (enableReactivity) {
-    $progress.forEach((progressRecord) => {
-      if (progressRecord.status === "In Progress") {
-        isOpen[progressRecord.course] = true;
-      }
-    });
-  }
+  run(() => {
+    if (enableReactivity) {
+      $progress.forEach((progressRecord) => {
+        if (progressRecord.status === "In Progress") {
+          isOpen[progressRecord.course] = true;
+        }
+      });
+    }
+  });
 
   // scroll into view of open courses
-  $: {
+  run(() => {
     (async () => {
       await tick();
       if (isOpen[openCourseId]) {
@@ -42,7 +47,7 @@
         }
       }
     })();
-  }
+  });
 
   // function to toggle opening & closing a course
   const toggleCourse = (courseId) => {
@@ -141,7 +146,7 @@
   >
     <div class="flex items-center gap-3">
       <button
-        on:click={() => ($isSidebarVisible = !$isSidebarVisible)}
+        onclick={() => ($isSidebarVisible = !$isSidebarVisible)}
         class="group flex items-center justify-center rounded-full bg-transparent p-2 text-xl transition hover:bg-white/10"
       >
         <Icon
@@ -204,7 +209,7 @@
       >
         <div
           aria-hidden="true"
-          on:click={() => toggleCourse(course.id)}
+          onclick={() => toggleCourse(course.id)}
           class={isOpen[course.id]
             ? "w-full cursor-pointer space-y-5 rounded-b-none rounded-t-md bg-white/5 p-5"
             : "w-full cursor-pointer space-y-5 rounded-md bg-white/5 p-5"}
@@ -243,8 +248,7 @@
                 <div class="flex items-center gap-3 sm:w-full">
                   {#if progressRecord.status === "Completed" || progressRecord.status === "In Progress"}
                     <button
-                      on:click|stopPropagation
-                      on:click={() => resetProgress(course.id)}
+                      onclick={handlers(stopPropagation(bubble('click')), () => resetProgress(course.id))}
                       class={loading[course.id]
                         ? "pointer-events-none line-clamp-1 flex items-center justify-center gap-2 truncate rounded-md px-4 py-2 text-red-400 opacity-50 outline outline-[1.5px] outline-red-400/20 transition hover:bg-red-400/20 sm:w-full sm:flex-1 sm:px-0"
                         : "line-clamp-1 flex items-center justify-center gap-2 truncate rounded-md px-4 py-2 text-red-400 outline outline-[1.5px] outline-red-400/20 transition hover:bg-red-400/20 sm:w-full sm:flex-1 sm:px-0"}
@@ -258,8 +262,7 @@
                     </button>
                   {/if}
                   <button
-                    on:click|stopPropagation
-                    on:click={() => goToFirstLessonOfCourse(course.id)}
+                    onclick={handlers(stopPropagation(bubble('click')), () => goToFirstLessonOfCourse(course.id))}
                     class="line-clamp-1 truncate rounded-md bg-white/10 px-4 py-2 outline outline-[1.5px] outline-white/20 transition hover:bg-white/20 sm:w-full sm:flex-1 sm:px-0"
                     >{progressRecord.status === "Completed"
                       ? $t("openCourse")
@@ -305,7 +308,7 @@
                   </h3>
                 </div>
                 <button
-                  on:click={() =>
+                  onclick={() =>
                     navigate(
                       `/${slugify(lesson.title, { lower: true, strict: true })}`,
                     )}

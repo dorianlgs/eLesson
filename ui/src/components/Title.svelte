@@ -1,17 +1,27 @@
 <script>
+  import { run } from 'svelte/legacy';
+
   import customize from "../../customize.json";
   const { name } = customize;
 
-  export let title = name;
-  export let suffix = "";
+  /**
+   * @typedef {Object} Props
+   * @property {any} [title]
+   * @property {string} [suffix]
+   */
 
-  let documentTitle;
+  /** @type {Props} */
+  let { title = name, suffix = "" } = $props();
 
-  $: if (suffix === "") {
-    documentTitle = title;
-  } else {
-    documentTitle = `${title} - ${suffix}`;
-  }
+  let documentTitle = $state();
+
+  run(() => {
+    if (suffix === "") {
+      documentTitle = title;
+    } else {
+      documentTitle = `${title} - ${suffix}`;
+    }
+  });
 </script>
 
 <svelte:head>

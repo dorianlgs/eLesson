@@ -4,7 +4,7 @@
   import { isLoading } from "../lib/store";
   import Sidebar from "../components/Sidebar.svelte";
   import Courses from "../components/Courses.svelte";
-  import { navigate } from "svelte-routing";
+  import { navigate } from "svelte5-router";
   import Title from "../components/Title.svelte";
   import { t } from "../lib/i18n";
 

@@ -1,14 +1,17 @@
 <script>
+  import { run, createBubbler, stopPropagation } from 'svelte/legacy';
+
+  const bubble = createBubbler();
   import { onMount, onDestroy } from "svelte";
   import { courses, lessons } from "../lib/pocketbase";
   import { scale } from "svelte/transition";
   import Icon from "@iconify/svelte";
   import { isSearchVisible } from "../lib/store";
-  import { navigate } from "svelte-routing";
+  import { navigate } from "svelte5-router";
   import slugify from "slugify";
   import { t } from "../lib/i18n";
 
-  let searchTerm = "";
+  let searchTerm = $state("");
 
   onMount(() => {
     window.addEventListener("keydown", handleKeydown);
@@ -18,12 +21,14 @@
     window.removeEventListener("keydown", handleKeydown);
   });
 
-  $: if (!$isSearchVisible) {
-    searchTerm = "";
-  }
+  run(() => {
+    if (!$isSearchVisible) {
+      searchTerm = "";
+    }
+  });
 
   // search through the lesson title, course title and course description
-  $: filteredLessons = $lessons.filter((lesson) => {
+  let filteredLessons = $derived($lessons.filter((lesson) => {
     const lessonTitleMatch = lesson.title
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
@@ -34,7 +39,7 @@
       course &&
       course.description.toLowerCase().includes(searchTerm.toLowerCase());
     return lessonTitleMatch || courseTitleMatch || courseDescriptionMatch;
-  });
+  }));
 
   const handleKeydown = (event) => {
     if (event.key === "Escape") {
@@ -46,13 +51,13 @@
 {#if $isSearchVisible}
   <div
     aria-hidden="true"
-    on:click={() => ($isSearchVisible = false)}
-    on:keydown={handleKeydown}
+    onclick={() => ($isSearchVisible = false)}
+    onkeydown={handleKeydown}
     class="fixed inset-0 z-20 flex items-center justify-center bg-black/50 p-5 backdrop-blur-sm"
   >
     <div
       aria-hidden="true"
-      on:click|stopPropagation
+      onclick={stopPropagation(bubble('click'))}
       transition:scale={{ duration: 250, opacity: 0.001, start: 0.98 }}
       class={filteredLessons.length > 5
         ? "hide-scrollbar relative m-auto h-[461px] w-[700px] overflow-y-scroll rounded-md bg-dark outline outline-[1.5px] outline-white/10"
@@ -71,7 +76,7 @@
           type="text"
           placeholder={$t("findLesson")}
         />
-        <button on:click={() => ($isSearchVisible = false)}>
+        <button onclick={() => ($isSearchVisible = false)}>
           <Icon
             class="flex-shrink-0 rotate-45 text-xl text-white/50 transition hover:text-white"
             icon="ph:plus"
@@ -92,7 +97,7 @@
           {#each filteredLessons as lesson (lesson.id)}
             {#if course.id === lesson.course}
               <button
-                on:click={() => {
+                onclick={() => {
                   navigate(
                     `/${slugify(lesson.title, { lower: true, strict: true })}`,
                   );
