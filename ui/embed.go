@@ -5,7 +5,7 @@ import (
 	"io/fs"
 )
 
-//go:generate npm install
+//go:generate npm install --force
 //go:generate npm run build
 //go:embed all:dist
 var distDir embed.FS

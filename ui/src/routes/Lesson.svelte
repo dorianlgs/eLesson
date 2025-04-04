@@ -1,6 +1,5 @@
-<!-- @migration-task Error while migrating Svelte code: Can't migrate code with afterUpdate. Please migrate by hand. -->
 <script>
-  import { onMount, afterUpdate, tick } from "svelte";
+  import { onMount, tick } from "svelte";
   import { slide } from "svelte/transition";
   import { quintOut } from "svelte/easing";
   import {
@@ -30,12 +29,13 @@
   import NotFound from "./NotFound.svelte";
   import Title from "../components/Title.svelte";
   import { t } from "../lib/i18n";
-  export let lessonTitle;
 
-  let loading = {};
+  let { lessonTitle } = $props();
+
+  let loading = $state({});
   let lessonVideo;
-  let currentCourseStatus = "";
-  let currentLessonTitle = "";
+  let currentCourseStatus = $state("");
+  let currentLessonTitle = $state("");
 
   const lessonLocation = useLocation();
 
@@ -49,7 +49,7 @@
     }
   });
 
-  afterUpdate(() => {
+  $effect(() => {
     lessonVideo = new Plyr("#lessonVideo", {
       invertTime: false,
       toggleInvert: false,
@@ -61,7 +61,7 @@
   });
 
   // find the current course status
-  $: {
+  $effect(() => {
     const currentLesson = $lessons.find(
       (lesson) =>
         slugify(lesson.title, { lower: true, strict: true }) ===
@@ -81,7 +81,7 @@
         }
       }
     }
-  }
+  });
 
   // function to get lessons of the current course
   function getCourseLessons(courseId) {
@@ -203,7 +203,7 @@
       <div class="flex w-full flex-col gap-5 p-5">
         <div class="flex items-center gap-3">
           <button
-            on:click={() => ($isSidebarVisible = !$isSidebarVisible)}
+            onclick={() => ($isSidebarVisible = !$isSidebarVisible)}
             class="group flex items-center justify-center rounded-full bg-transparent p-2 text-xl transition hover:bg-white/10"
           >
             <Icon
@@ -239,7 +239,7 @@
           >
             <div class="space-y-5">
               <button
-                on:click={() => navigate("/")}
+                onclick={() => navigate("/")}
                 class="flex items-center gap-2 text-white/50 transition hover:text-white"
               >
                 <Icon class="flex-shrink-0" icon="ph:arrow-left" />
@@ -250,7 +250,7 @@
               >
                 <div class="flex items-center gap-3">
                   <button
-                    on:click={() => ($isSidebarVisible = !$isSidebarVisible)}
+                    onclick={() => ($isSidebarVisible = !$isSidebarVisible)}
                     class="group flex items-center justify-center rounded-full bg-transparent p-2 text-xl transition hover:bg-white/10"
                   >
                     <Icon
@@ -267,7 +267,7 @@
                   <div class="flex items-center gap-3 sm:w-full sm:flex-col">
                     {#if !findCurrentLessonIndex(getCourseLessons($lessons.find((lesson) => slugify( lesson.title, { lower: true, strict: true }, ) === slugify( lessonTitle, { lower: true, strict: true }, )).course)) <= 0}
                       <button
-                        on:click={goToPreviousLesson}
+                        onclick={goToPreviousLesson}
                         class="line-clamp-1 flex items-center justify-center gap-2 truncate rounded-md bg-white/10 px-4 py-2 outline outline-[1.5px] outline-white/20 transition hover:bg-white/20 sm:order-last sm:w-full"
                       >
                         <Icon class="flex-shrink-0" icon="ph:arrow-left" />
@@ -277,7 +277,7 @@
 
                     {#if findCurrentLessonIndex(getCourseLessons($lessons.find((lesson) => slugify( lesson.title, { lower: true, strict: true }, ) === slugify( lessonTitle, { lower: true, strict: true }, )).course)) >= getCourseLessons($lessons.find((lesson) => slugify( lesson.title, { lower: true, strict: true }, ) === slugify( lessonTitle, { lower: true, strict: true }, )).course).length - 1}
                       <button
-                        on:click={() => completeCourse(lesson.id)}
+                        onclick={() => completeCourse(lesson.id)}
                         class={loading[lesson.id] ||
                         currentCourseStatus === "Completed"
                           ? "pointer-events-none line-clamp-1 flex items-center justify-center gap-2 truncate rounded-md bg-emerald-400/60 px-4 py-2 opacity-50 transition hover:bg-emerald-400/50 sm:order-first sm:w-full"
@@ -297,7 +297,7 @@
                       </button>
                     {:else}
                       <button
-                        on:click={goToNextLesson}
+                        onclick={goToNextLesson}
                         class="line-clamp-1 flex items-center justify-center gap-2 truncate rounded-md bg-main px-4 py-2 transition hover:bg-main/80 sm:order-first sm:w-full"
                       >
                         {$t("nextLesson")}
@@ -365,7 +365,7 @@
                   {#each $lesson_faqs as faq}
                     {#if faq.lesson.includes(lesson.id)}
                       <button
-                        on:click={() => (faq.isOpen = !faq.isOpen)}
+                        onclick={() => (faq.isOpen = !faq.isOpen)}
                         class="w-full space-y-2 rounded-md bg-white/10 p-2 outline outline-[1.5px] outline-white/20 transition hover:bg-white/20"
                       >
                         <div
