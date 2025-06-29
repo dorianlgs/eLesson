@@ -6,7 +6,23 @@
 
   let { lessonId } = $props();
 
-  let lessonFaqs = $derived($lesson_faqs.filter((faq) => faq.lesson.includes(lessonId)));
+  let lessonFaqs = $derived(
+    $lesson_faqs.filter((faq) => faq.lesson.includes(lessonId)),
+  );
+
+  // Track which FAQs are open by their ID
+  let openFaqs = $state([]);
+
+  function toggleFaq(faqId) {
+    if (openFaqs.includes(faqId)) {
+      var index = openFaqs.indexOf(faqId);
+      if (index !== -1) {
+        openFaqs.splice(index, 1);
+      }
+    } else {
+      openFaqs.push(faqId);
+    }
+  }
 </script>
 
 {#if lessonFaqs.length > 0}
@@ -17,34 +33,25 @@
     </h2>
     {#each lessonFaqs as faq}
       <button
-        onclick={() => (faq.isOpen = !faq.isOpen)}
+        onclick={() => toggleFaq(faq.id)}
         class="w-full space-y-2 rounded-md bg-white/10 p-2 outline outline-[1.5px] outline-white/20 transition hover:bg-white/20"
       >
-        <div
-          class="flex items-center justify-between gap-2 text-start"
-        >
+        <div class="flex items-center justify-between gap-2 text-start">
           <h3 class="line-clamp-1">
             {faq.question}
           </h3>
           <Icon
-            class={faq.isOpen
+            class={openFaqs.includes(faq.id)
               ? "flex-shrink-0 rotate-45 transition"
               : "flex-shrink-0 transition"}
             icon="ph:plus"
           />
         </div>
-        {#if faq.isOpen}
-          <p
-            transition:slide={{
-              duration: 250,
-              easing: quintOut,
-            }}
-            class="text-start text-white/60"
-          >
-            {faq.answer}
-          </p>
+
+        {#if openFaqs.includes(faq.id)}
+          {faq.answer}
         {/if}
       </button>
     {/each}
   </div>
-{/if} 
+{/if}
