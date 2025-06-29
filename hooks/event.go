@@ -155,7 +155,7 @@ func InitHooks(app *pocketbase.PocketBase) error {
 
 				if courseRecord != nil {
 					assignees := courseRecord.GetStringSlice("assignees")
-					assigneeToRemove := deletedProgressRecord.Get("assignee")
+					assigneeToRemove := deletedProgressRecord.GetString("assignee")
 
 					updatedAssignees := []string{}
 					for _, assignee := range assignees {
@@ -252,6 +252,9 @@ func InitHooks(app *pocketbase.PocketBase) error {
 			coursesCollection.Name,
 			dbx.HashExp{"assign_to_everyone": true},
 		)
+		if err != nil {
+			return err
+		}
 
 		for _, course := range assignedToEveryoneCourses {
 			assignees := course.GetStringSlice("assignees")
