@@ -49,7 +49,15 @@
         </div>
 
         {#if openFaqs.includes(faq.id)}
-          {faq.answer}
+          <p
+            transition:slide={{
+              duration: 250,
+              easing: quintOut,
+            }}
+            class="text-start text-white/60"
+          >
+            {faq.answer}
+          </p>
         {/if}
       </button>
     {/each}
