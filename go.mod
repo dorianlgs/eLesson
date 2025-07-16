@@ -1,4 +1,4 @@
-module github.com/shujink0/eLesson
+module github.com/dorianlgs/eLesson
 
 go 1.24.0
 

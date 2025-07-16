@@ -29,7 +29,7 @@ rsync -av /Users/doriangonzalez/Workspace/eLesson/pb_migrations/ root@192.168.10
 
 ## Module creation
 ```bash
-go mod init github.com/shujink0/eLesson
+go mod init github.com/dorianlgs/eLesson
 ```
 
 ## Update All Go Modules

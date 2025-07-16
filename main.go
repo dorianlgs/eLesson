@@ -12,8 +12,8 @@ import (
 	"github.com/pocketbase/pocketbase/plugins/migratecmd"
 	"github.com/pocketbase/pocketbase/tools/hook"
 
-	"github.com/shujink0/eLesson/hooks"
-	"github.com/shujink0/eLesson/ui"
+	"github.com/dorianlgs/eLesson/hooks"
+	"github.com/dorianlgs/eLesson/ui"
 )
 
 func main() {
